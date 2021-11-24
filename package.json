@@ -1,0 +1,44 @@
+{
+  "name": "dmonesi-utils-amplify",
+  "version": "1.0.0",
+  "description": "A collection of small AWS amplify related utilities that I use almost everyday in TS projects.",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node dist/index.js",
+    "clean": "rimraf dist",
+    "prepare": "npm run build",
+    "gen-docs": "typedoc --out docs src && echo \"\" > docs/.nojekyll",
+    "refresh-dmonesi-utils": "rimraf node_modules/dmonesi-utils* && npm i"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/monesidn/dmonesi-utils-amplify.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/monesidn/dmonesi-utils-amplify/issues"
+  },
+  "homepage": "https://github.com/monesidn/dmonesi-utils-amplify#readme",
+  "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "@typescript-eslint/parser": "^5.3.1",
+    "eslint": "^8.2.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-tsdoc": "^0.2.14",
+    "jest": "^27.3.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.0.7",
+    "typedoc": "^0.22.8",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "aws-amplify": "^4.3.6",
+    "mobx": "^6.3.7",
+    "dmonesi-utils-ts": "git+https://github.com/monesidn/dmonesi-utils-ts.git"
+  },
+  "main": "./dist/index.js"
+}
