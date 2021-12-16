@@ -48,7 +48,7 @@ export class GraphqlAPI<Q extends GraphQLStamentsObject, M extends GraphQLStamen
     };
 
     async booleanMutation(name: keyof M, variables: object = {}): Promise<boolean> {
-        const result = this.mutation<boolean>(name, variables);
+        const result = await this.mutation<boolean>(name, variables);
 
         if (!result) {
             throw new Error(`Unexpected value "true" from mutation ${name}. Got: ${result}`);
