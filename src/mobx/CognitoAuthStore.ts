@@ -13,7 +13,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
  * }
  * ```
  */
-export default class CognitoAutoStore {
+export class CognitoAutoStore {
     user?: CognitoUser | null;
     userId?: string | null;
     username?: string | null;
