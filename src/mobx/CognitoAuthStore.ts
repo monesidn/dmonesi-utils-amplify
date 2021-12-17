@@ -1,6 +1,5 @@
-import Auth, { CognitoUser } from '@aws-amplify/auth';
-import { Hub } from 'aws-amplify';
-import { makeAutoObservable, runInAction } from 'mobx';
+import { CognitoUser } from '@aws-amplify/auth';
+import { auth as Auth, hub as Hub, mobx as MobX } from '../services';
 
 /**
  * Ready to use Mobx Store interfacing with Cognito APIs. This Store
@@ -22,7 +21,7 @@ export class CognitoAuthStore {
 
     private async updateUser(user: CognitoUser | null) {
         if (!user) {
-            runInAction(() => {
+            MobX.runInAction(() => {
                 this.user = null;
                 this.username = null;
                 this.userId = null;
@@ -38,7 +37,7 @@ export class CognitoAuthStore {
                 unwrappedAttrs[a.Name] = a.Value;
             }
 
-            runInAction(() => {
+            MobX.runInAction(() => {
                 this.userAttributes = unwrappedAttrs;
                 this.userId = user.getUsername();
                 this.user = user;
@@ -68,7 +67,7 @@ export class CognitoAuthStore {
             console.log('currentAuthenticatedUser returned an error', ex);
             this.updateUser(null);
         }
-        runInAction(() => this.user = user);
+        MobX.runInAction(() => this.user = user);
         console.log('Current user', this.user);
     }
 
@@ -90,7 +89,7 @@ export class CognitoAuthStore {
         private auth: typeof Auth,
         private hub: typeof Hub
     ) {
-        makeAutoObservable(this);
+        MobX.makeAutoObservable(this);
 
         this.hub.listen('auth', this.createListener());
         this.restoreSession();

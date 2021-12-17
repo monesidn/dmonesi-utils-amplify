@@ -1,4 +1,5 @@
-import API, { GraphQLResult } from '@aws-amplify/api-graphql';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { api as API } from '../services';
 import Observable from 'zen-observable-ts';
 import { UnexpectedGraphqlResult } from './Errors';
 import { isObservable, observableToPromise } from './observable-type';
