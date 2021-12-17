@@ -1,5 +1,6 @@
-import { CognitoUser } from '@aws-amplify/auth';
-import { auth as Auth, hub as Hub, mobx as MobX } from '../services';
+import Auth, { CognitoUser } from '@aws-amplify/auth';
+import { Hub } from 'aws-amplify';
+import { makeAutoObservable, runInAction } from 'mobx';
 
 /**
  * Ready to use Mobx Store interfacing with Cognito APIs. This Store
@@ -21,14 +22,14 @@ export class CognitoAuthStore {
 
     private async updateUser(user: CognitoUser | null) {
         if (!user) {
-            MobX.runInAction(() => {
+            runInAction(() => {
                 this.user = null;
                 this.username = null;
                 this.userId = null;
                 this.userAttributes = null;
             });
         } else {
-            const attrs = await this.auth.userAttributes(user);
+            const attrs = await Auth.userAttributes(user);
             const emailAttr = attrs.find((a) => a.Name === 'email');
             const username = emailAttr ? emailAttr.Value : user.getUsername();
 
@@ -37,7 +38,7 @@ export class CognitoAuthStore {
                 unwrappedAttrs[a.Name] = a.Value;
             }
 
-            MobX.runInAction(() => {
+            runInAction(() => {
                 this.userAttributes = unwrappedAttrs;
                 this.userId = user.getUsername();
                 this.user = user;
@@ -62,12 +63,12 @@ export class CognitoAuthStore {
     private async restoreSession() {
         let user: CognitoUser | null;
         try {
-            this.updateUser(await this.auth.currentAuthenticatedUser());
+            this.updateUser(await Auth.currentAuthenticatedUser());
         } catch (ex) {
             console.log('currentAuthenticatedUser returned an error', ex);
             this.updateUser(null);
         }
-        MobX.runInAction(() => this.user = user);
+        runInAction(() => this.user = user);
         console.log('Current user', this.user);
     }
 
@@ -79,19 +80,10 @@ export class CognitoAuthStore {
         return Auth.signOut();
     }
 
-    /**
-     * Create the store. To avoid problems with multiple instances of Auth and
-     * hub we force the caller to pass them.
-     * @param auth - Amplify Auth object
-     * @param hub - Ambplify Hub object
-     */
-    constructor(
-        private auth: typeof Auth,
-        private hub: typeof Hub
-    ) {
-        MobX.makeAutoObservable(this);
+    constructor() {
+        makeAutoObservable(this);
 
-        this.hub.listen('auth', this.createListener());
+        Hub.listen('auth', this.createListener());
         this.restoreSession();
     }
 }
