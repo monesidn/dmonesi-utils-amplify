@@ -6,6 +6,7 @@
         "outDir": "./dist",
         "strict": true,
         "esModuleInterop": true,
+        "useDefineForClassFields": true,
         "lib": [
             "dom", "ES2018", "es2020.string"
         ]
