@@ -29,7 +29,7 @@ export class CognitoAuthStore {
                 this.userAttributes = null;
             });
         } else {
-            const attrs = await Auth.userAttributes(user);
+            const attrs = await this.auth.userAttributes(user);
             const emailAttr = attrs.find((a) => a.Name === 'email');
             const username = emailAttr ? emailAttr.Value : user.getUsername();
 
@@ -63,7 +63,7 @@ export class CognitoAuthStore {
     private async restoreSession() {
         let user: CognitoUser | null;
         try {
-            this.updateUser(await Auth.currentAuthenticatedUser());
+            this.updateUser(await this.auth.currentAuthenticatedUser());
         } catch (ex) {
             console.log('currentAuthenticatedUser returned an error', ex);
             this.updateUser(null);
@@ -80,10 +80,19 @@ export class CognitoAuthStore {
         return Auth.signOut();
     }
 
-    constructor() {
+    /**
+     * Create the store. To avoid problems with multiple instances of Auth and
+     * hub we force the caller to pass them.
+     * @param auth - Amplify Auth object
+     * @param hub - Ambplify Hub object
+     */
+    constructor(
+        private auth: typeof Auth,
+        private hub: typeof Hub
+    ) {
         makeAutoObservable(this);
 
-        Hub.listen('auth', this.createListener());
+        this.hub.listen('auth', this.createListener());
         this.restoreSession();
     }
 }
