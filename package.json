@@ -4,7 +4,6 @@
   "description": "A collection of small AWS amplify related utilities that I use almost everyday in TS projects.",
   "scripts": {
     "test": "jest",
-    "prebuild": "npm-install-peers",
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node dist/index.js",
@@ -35,7 +34,9 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^27.0.7",
     "typedoc": "^0.22.8",
-    "typescript": "^4.4.4"
+    "typescript": "^4.4.4",
+    "aws-amplify": "^4.3.11",
+    "mobx": "^6.3.3"
   },
   "dependencies": {
     "dmonesi-utils-ts": "git+https://github.com/monesidn/dmonesi-utils-ts.git"
